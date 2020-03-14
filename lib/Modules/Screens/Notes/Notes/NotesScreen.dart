@@ -5,12 +5,24 @@ import 'package:http/http.dart' as http;
 import 'package:notes_rea/Modules/CommonWidgets/Loader.dart';
 import 'package:notes_rea/Modules/Screens/Notes/Models/Notes.dart';
 
-class NotesScreen extends StatelessWidget {
+class NotesScreen extends StatefulWidget {
+  @override
+  _NotesScreenState createState() => _NotesScreenState();
+}
+
+class _NotesScreenState extends State<NotesScreen> {
+  Future<List<Notes>> list;
+  @override
+  void initState() {
+    list = _fetchNotes();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder<Object>(
-            future: this._fetchNotes(),
+            future: list,
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data != null) {
                 return ListView.builder(

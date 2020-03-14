@@ -1,6 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:notes_rea/Modules/CommonWidgets/AppButton.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  Duration interval = Duration(seconds: 2);
+  Stream<int> stream;
+  @override
+  void initState() {
+    _useStream();
+    super.initState();
+    
+  
+  }
+
+  _useStream() async{
+    stream = Stream<int>.periodic(interval, _streamCall);
+    await for(int i in stream){
+      print(i);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,17 +38,20 @@ class LoginScreen extends StatelessWidget {
               'images/user.png',
               height: 60,
             ),
-            FlatButton(
-              onPressed: () => this._clicked(Type.one, context),
-              child: Text('oneTitle'),
+            AppButton(
+              onPressed: (route, count) => this._clicked(route, context),
+              route: '/notes',
+              title: 'One',
             ),
-            FlatButton(
-              onPressed: () => this._clicked(Type.two, context),
-              child: Text('twoTitle'),
+            AppButton(
+              onPressed: (route, cont) => this._clicked(route, context),
+              title: 'two',
+              route: '/settings',
             ),
-            FlatButton(
-              onPressed: () => this._clicked(Type.three, context),
-              child: Text('threeTitle'),
+            AppButton(
+              onPressed: (route, cont) => this._clicked(route, context),
+              route: '/login',
+              title: 'three',
             ),
             Row(
               children: <Widget>[
@@ -43,7 +70,7 @@ class LoginScreen extends StatelessWidget {
                   color: Colors.blue,
                   height: 40,
                   width: 40,
-                )
+                ),
               ],
             )
           ],
@@ -52,9 +79,13 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  _clicked(Type type, context) {
-    print(type);
-    Navigator.pushNamed(context, '/notes');
+  int _streamCall(int value) {
+       print('value: $value');
+  }
+
+  _clicked(route, context) {
+    print(route);
+    Navigator.pushNamed(context, route);
   }
 }
 
