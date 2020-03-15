@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:notes_rea/Modules/CommonWidgets/AppButton.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -8,26 +10,57 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  Duration interval = Duration(seconds: 2);
-  Stream<int> stream;
+  //Stream<String> stream;
+  Status state = Status.initial;
+
+  StreamController<String> streamController = StreamController.broadcast();
+
   @override
   void initState() {
     _useStream();
     super.initState();
-    
-  
   }
 
-  _useStream() async{
-    stream = Stream<int>.periodic(interval, _streamCall);
-    await for(int i in stream){
-      print(i);
-    }
+  _useStream() async {
+    print('stream creating');
+    // stream = Stream<String>.fromFuture(_getNotes());
+    print('stream created');
+
+    streamController.stream.listen((data) {
+      print('data recied: $data');
+    }, onDone: () {
+      print('finished');
+    }, onError: (err) {
+      print('error');
+    });
+
+    streamController.stream.listen((data) {
+      print('data recied: $data');
+    }, onDone: () {
+      print('finished');
+    }, onError: (err) {
+      print('error');
+    });
+
+    streamController.add('event');
+
+    streamController.add('event1');
+
+  }
+
+  Future<String> _getNotes() async {
+    state = Status.loading;
+    print('geting data started');
+    await Future.delayed(Duration(seconds: 5));
+    print('geting data done');
+    state = Status.done;
+    return 'this data';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Container(
         child: Center(
             child: Column(
@@ -42,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: (route, count) => this._clicked(route, context),
               route: '/notes',
               title: 'One',
+              isActive: false,
             ),
             AppButton(
               onPressed: (route, cont) => this._clicked(route, context),
@@ -71,6 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 40,
                   width: 40,
                 ),
+                Text('$state')
               ],
             )
           ],
@@ -80,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   int _streamCall(int value) {
-       print('value: $value');
+    print('value: $value');
   }
 
   _clicked(route, context) {
@@ -90,3 +125,4 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 enum Type { one, two, three }
+enum Status { initial, loading, done }

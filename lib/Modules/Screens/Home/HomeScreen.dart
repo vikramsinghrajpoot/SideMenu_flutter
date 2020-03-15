@@ -19,7 +19,13 @@ class _HomeScreenState extends State<HomeScreen> {
           pickedOption: this._pickedOption,
         ),
         appBar: AppBar(),
-        body: container);
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              Text('This is default'),
+            ],
+          ),
+        ));
   }
 
   _moveToNotes(context) {
@@ -32,15 +38,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
     switch (menu) {
       case Menu.home:
-        container = LoginScreen();
+        Navigator.pushNamed(context, '/login');
         break;
 
       case Menu.notes:
-        container = NotesScreen();
+        // container = NotesScreen();
+        //Navigator.pushNamed(context, '/notes');
+        Navigator.pushNamed(context, '/settings',
+            arguments: {'type': Menu.notes});
+
         break;
 
       case Menu.setting:
-        container = Settings();
+        // container = Settings();
+        Navigator.pushNamed(context, '/settings',
+            arguments: {'type': Menu.setting});
     }
     this.setState(() => {});
     print(menu);

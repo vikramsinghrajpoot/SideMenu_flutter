@@ -21,6 +21,7 @@ class _NotesScreenState extends State<NotesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(),
         body: FutureBuilder<Object>(
             future: list,
             builder: (context, snapshot) {
