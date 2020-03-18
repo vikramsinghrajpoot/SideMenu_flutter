@@ -11,21 +11,76 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Widget container = LoginScreen();
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    Container(
+      child: Column(
+        children: <Widget>[
+          GestureDetector(child: Text('This is Home'),),
+        ],
+      ),
+    ),
+    NotesScreen(
+      neeAppBar: true,
+    ),
+    Settings(),
+    LoginScreen()
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: SidebarList(
-          pickedOption: this._pickedOption,
-        ),
-        appBar: AppBar(),
-        body: Container(
-          child: Column(
-            children: <Widget>[
-              Text('This is default'),
-            ],
+      drawer: SidebarList(
+        pickedOption: this._pickedOption,
+      ),
+      appBar: AppBar(),
+      body: _children[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: _tabSelected,
+        currentIndex: 0, // this will be set when a new tab is tapped
+        items: [
+          BottomNavigationBarItem(
+            icon: new Icon(
+              Icons.home,
+              color: Colors.red,
+            ),
+            title: new Text('Home'),
           ),
-        ));
+          BottomNavigationBarItem(
+            icon: new Icon(
+              Icons.mail,
+              color: Colors.red,
+            ),
+            title: new Text('Messages'),
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(
+              Icons.mail,
+              color: Colors.red,
+            ),
+            title: new Text('Messages'),
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.person,
+                color: Colors.red,
+              ),
+              title: Text('Profile'))
+        ],
+      ),
+    );
+  }
+
+  _tabSelected(tab) {
+    _showAlert();
+    this.setState(() {
+      _currentIndex = tab;
+    });
   }
 
   _moveToNotes(context) {
@@ -56,5 +111,20 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     this.setState(() => {});
     print(menu);
+  }
+
+  _showAlert() {
+    return AlertDialog(
+      title: Text('Ttitle'),
+      content: Text('here we go!'),
+      actions: <Widget>[
+        FlatButton(
+          child: Text("OK"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        )
+      ],
+    );
   }
 }

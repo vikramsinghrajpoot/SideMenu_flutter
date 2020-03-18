@@ -23,4 +23,10 @@ class Settings extends StatelessWidget {
       );
     }
   }
+
+  @override
+  List<DiagnosticsNode> debugDescribeChildren() {
+    // TODO: implement debugDescribeChildren
+    return super.debugDescribeChildren();
+  }
 }
