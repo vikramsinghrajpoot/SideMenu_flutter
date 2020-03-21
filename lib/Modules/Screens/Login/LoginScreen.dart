@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:notes_rea/Modules/CommonWidgets/AppButton.dart';
+import 'package:notes_rea/Modules/CommonWidgets/AppInput.dart';
+import 'package:notes_rea/Modules/CommonWidgets/Dialogs.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,6 +14,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   //Stream<String> stream;
   Status state = Status.initial;
+
+  final emialController = TextEditingController();
+  final passController = TextEditingController();
 
   StreamController<String> streamController = StreamController.broadcast();
 
@@ -45,7 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
     streamController.add('event');
 
     streamController.add('event1');
-
   }
 
   Future<String> _getNotes() async {
@@ -71,47 +75,52 @@ class _LoginScreenState extends State<LoginScreen> {
               'images/user.png',
               height: 60,
             ),
-            AppButton(
-              onPressed: (route, count) => this._clicked(route, context),
-              route: '/notes',
-              title: 'One',
-              isActive: false,
+            AppInput(
+              hintText: "name",
+              labelText: "Name:",
+              controller: emialController,
+              onChange: this._onchange,
             ),
-            AppButton(
-              onPressed: (route, cont) => this._clicked(route, context),
-              title: 'two',
-              route: '/settings',
+            AppInput(
+              hintText: "pass",
+              labelText: "Password:",
+              controller: passController,
+              onChange: this._onchange,
+              errorText: "Error",
             ),
-            AppButton(
-              onPressed: (route, cont) => this._clicked(route, context),
-              route: '/login',
-              title: 'three',
+            new DropdownButton<String>(
+              items: <String>['A', 'B', 'C', 'D'].map((String value) {
+                return new DropdownMenuItem<String>(
+                  value: value,
+                  child: new Text(value),
+                );
+              }).toList(),
+              onChanged: (_) {},
             ),
-            Row(
-              children: <Widget>[
-                Container(
-                  color: Colors.red,
-                  height: 40,
-                  width: 40,
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 20, right: 20),
-                  color: Colors.green,
-                  height: 40,
-                  width: 40,
-                ),
-                Container(
-                  color: Colors.blue,
-                  height: 40,
-                  width: 40,
-                ),
-                Text('$state')
-              ],
-            )
+            FlatButton(
+              child: Text('Show'),
+              onPressed: () {
+                Dialogs.confirm(context, 'title', 'description', 'actionText',
+                    'cancelText', _dismiss);
+              },
+            ),
           ],
         )),
       ),
     );
+  }
+
+  _dismiss() {
+    Navigator.of(context).pop(context);
+  }
+
+  _onchange(value, type) {
+    switch (type) {
+      case InputType.email:
+
+      case InputType.password:
+    }
+    print(value);
   }
 
   int _streamCall(int value) {
