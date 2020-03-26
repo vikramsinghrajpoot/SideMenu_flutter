@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:notes_rea/Modules/CommonWidgets/Loader.dart';
 import 'package:notes_rea/Modules/Screens/Notes/Models/Notes.dart';
+import 'package:notes_rea/Modules/Screens/Notes/Notes/NotesBloc.dart';
+import 'package:notes_rea/Modules/Service/ApiResponse.dart';
+import '../../../Service/ApiBase.dart';
 
 class NotesScreen extends StatefulWidget {
   bool neeAppBar = false;
@@ -14,7 +17,9 @@ class NotesScreen extends StatefulWidget {
 }
 
 class _NotesScreenState extends State<NotesScreen> {
-  Future<List<Notes>> list;
+  Future<ApiResponse> list;
+  final _bloc = NotesBloc();
+
   @override
   void initState() {
     list = _fetchNotes();
@@ -25,8 +30,8 @@ class _NotesScreenState extends State<NotesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: widget.neeAppBar ? AppBar() : null,
-        body: FutureBuilder<Object>(
-            future: list,
+        body: StreamBuilder<ApiStatus>(
+            stream: _bloc.controller.stream,
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data != null) {
                 return ListView.builder(
@@ -67,7 +72,7 @@ class _NotesScreenState extends State<NotesScreen> {
     _showAlert(data.title, data.id);
   }
 
-  _showAlert(title,id) {
+  _showAlert(title, id) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -84,16 +89,7 @@ class _NotesScreenState extends State<NotesScreen> {
             ));
   }
 
-  Future<List<Notes>> _fetchNotes() async {
-    final url = 'https://jsonplaceholder.typicode.com/todos';
-    final http.Response response = await http.get(url);
-    List<Notes> notes = List<Notes>();
-    if (response.statusCode == 200) {
-      final List<dynamic> tempNotes = json.decode(response.body);
-      tempNotes.map((obj) => notes.add(Notes.fromJson(obj))).toList();
-      return notes;
-    } else {
-      throw Exception('Something went wrong');
-    }
+  Future<ApiResponse> _fetchNotes() async {
+     _bloc.fetchNotes(); 
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:notes_rea/Modules/Constants.dart';
 import 'package:notes_rea/Modules/Service/ApiResponse.dart';
 import 'package:notes_rea/Modules/Service/AppException.dart';
 
@@ -10,9 +11,9 @@ abstract class ApiBase {
   ApiBase({this.url});
 
   Future<dynamic> get(params) async {
-    final headers = {};
+    //final headers = {};
     try {
-      final response = await http.get(url + params, headers: headers);
+      final response = await http.get(url,);
       final ApiResponse responseJson = _proceesRequest(response);
       return responseJson;
     } on SocketException {
@@ -72,4 +73,8 @@ abstract class ApiBase {
     }
     return apiresponse;
   }
+}
+
+class ServiceManager extends ApiBase {
+  ServiceManager(serviceUrl) : super(url: BASE_URL + serviceUrl);
 }

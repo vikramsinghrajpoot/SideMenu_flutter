@@ -4,7 +4,7 @@ class ApiResponse<T> {
   String message;
 
   ApiResponse.loading(this.message) : status = ApiStatus.Loading;
-  ApiResponse.completed(this.message) : status = ApiStatus.Completed;
+  ApiResponse.completed(this.data) : status = ApiStatus.Completed;
   ApiResponse.error(this.message) : status = ApiStatus.Error;
 }
 
