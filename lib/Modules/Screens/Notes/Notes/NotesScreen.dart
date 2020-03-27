@@ -10,7 +10,6 @@ import '../../../Service/ApiBase.dart';
 
 class NotesScreen extends StatefulWidget {
   bool neeAppBar = false;
-
   NotesScreen({this.neeAppBar});
   @override
   _NotesScreenState createState() => _NotesScreenState();
@@ -22,7 +21,7 @@ class _NotesScreenState extends State<NotesScreen> {
 
   @override
   void initState() {
-    list = _fetchNotes();
+    _bloc.fetchNotes();
     super.initState();
   }
 
@@ -30,13 +29,17 @@ class _NotesScreenState extends State<NotesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: widget.neeAppBar ? AppBar() : null,
-        body: StreamBuilder<ApiStatus>(
+        body: StreamBuilder<ApiResponse>(
             stream: _bloc.controller.stream,
             builder: (context, snapshot) {
-              if (snapshot.hasData && snapshot.data != null) {
+              if (snapshot.connectionState == ConnectionState.waiting || snapshot.data.data == null) {
+                return Loader();
+              } else if (snapshot.data.status == ApiStatus.Error) {
+                return Center(child: Container(child: Text('Error shown'),),);
+              } else {
                 return ListView.builder(
                   itemBuilder: (context, index) {
-                    final note = (snapshot.data as List<Notes>)[index];
+                    final note = (snapshot.data.data as List<Notes>)[index];
                     return GestureDetector(
                       onTap: () => _selectedItem(note),
                       child: Card(
@@ -55,14 +58,8 @@ class _NotesScreenState extends State<NotesScreen> {
                       ),
                     );
                   },
-                  itemCount: (snapshot.data as List<Notes>).length,
+                  itemCount: (snapshot.data.data as List<Notes>).length,
                 );
-              } else if (snapshot.hasError) {
-                return Container(
-                  child: Text("Error"),
-                );
-              } else {
-                return Loader();
               }
             }));
   }
@@ -87,9 +84,5 @@ class _NotesScreenState extends State<NotesScreen> {
                 )
               ],
             ));
-  }
-
-  Future<ApiResponse> _fetchNotes() async {
-     _bloc.fetchNotes(); 
   }
 }

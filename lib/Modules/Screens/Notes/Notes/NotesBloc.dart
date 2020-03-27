@@ -6,16 +6,17 @@ import '../../../Service/ApiBase.dart';
 
 class NotesBloc {
 
-final controller = StreamController<ApiStatus>();
+final controller = StreamController<ApiResponse>();
 
 fetchNotes() async{
-  controller.sink.add(ApiStatus.Loading);
-  ApiResponse response = await ServiceManager('todos').get('');
+  ApiResponse response = ApiResponse.loading("Loading");
+  controller.sink.add(response);
+  response = await ServiceManager('todos').get('');
   List<Notes> notes = List<Notes>();
   final tempNotes = response.data;
   tempNotes.map((obj) => notes.add(Notes.fromJson(obj))).toList();
   response.data = notes;
-  controller.sink.add(ApiStatus.Completed);
+  controller.sink.add(response);
 }
 
 }
