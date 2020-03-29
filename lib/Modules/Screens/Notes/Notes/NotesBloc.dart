@@ -19,4 +19,11 @@ fetchNotes() async{
   controller.sink.add(response);
 }
 
+postNotes(email, password)async{
+  ApiResponse response = ApiResponse.loading("Loading");
+  controller.sink.add(response);
+  response = await ServiceManager('todos').post({"email":email, "password":password});
+  controller.sink.add(response);
+}
+
 }

@@ -70,6 +70,8 @@ class _NotesScreenState extends State<NotesScreen> {
   }
 
   _showAlert(title, id) {
+
+    
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
